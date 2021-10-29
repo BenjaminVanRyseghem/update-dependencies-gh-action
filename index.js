@@ -7,23 +7,19 @@ const Git = require("./helpers/git.js");
 const { DateTime } = require("luxon");
 const marked = require("marked");
 
-const toIgnore = [
-	"bootstrap",
-	"jquery",
-	"sugar"
-];
+const toIgnore = core.getInput("ignore") ? core.getInput("ignore").split(",") : [];
 
 const numberOfCommitsToDisplay = 6;
-const owner = "foretagsplatsen";
-const repo = "monitor";
-const cwd = "/Users/benjamin/work/monitor";
-const clientCwd = path.resolve(cwd, "monitor", "Monitor.Web.Ui", "Client")
+const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
+const cwd = process.env.GITHUB_WORKSPACE;
+const clientWorkingDirectory = core.getInput("directory");
 const git = new Git({
 	path: cwd,
-	name: "Benjamin Van Ryseghem",
-	email: "benjamin.vanryseghem@wolterskluwer.com"
+	clientWorkingDirectory,
+	name: "Dependabot with Yarn 3",
+	email: "benjamin@vanryseghem.com"
 })
-const myToken = core.getInput("myToken") || process.env.GITHUB_TOKEN;
+const myToken = core.getInput("githubToken") || process.env.GITHUB_TOKEN;
 const octokit = github.getOctokit(myToken)
 
 function escapeCommitMessage(commit) {
@@ -127,7 +123,7 @@ ${tags
 async function update(packageInfo) {
 	let branchName = packageInfo.branchName();
 	await git.goToNewBranch(branchName);
-	await shellExec(`yarn up "${packageInfo.name}"`, { clientCwd });
+	await shellExec(`yarn up "${packageInfo.name}"`, { clientWorkingDirectory });
 	await git.addFilesAndCommit(packageInfo.prName());
 	await git.pushCommit(branchName, { force: true });
 
@@ -169,7 +165,7 @@ async function checkIfUpdateIsNeeded(packageInfo) {
 }
 
 function fetchYarnPackages() {
-	return shellExec("yarn info --name-only", { json: true, clientCwd }).then((data) => {
+	return shellExec("yarn info --name-only", { json: true, clientWorkingDirectory }).then((data) => {
 		let result = {};
 		data.forEach((info) => {
 			let packageInfo = new PackageInfo(info);
@@ -183,7 +179,7 @@ function fetchYarnPackages() {
 }
 
 function fetchLatestVersion(names) {
-	return shellExec(`yarn npm info ${names.join(" ")}`, { json: true, clientCwd });
+	return shellExec(`yarn npm info ${names.join(" ")}`, { json: true, clientWorkingDirectory });
 }
 
 async function checkIfPRExistsFor(packageInfo) {

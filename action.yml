@@ -1,0 +1,15 @@
+name: 'Update yarn 3 dependencies'
+description: 'Open PRs to update dependencies using yarn 3'
+inputs:
+  githubToken: # id of input
+    description: 'Github Authorization Token (secrets.GITHUB_TOKEN)'
+    required: true
+  directory:
+    description: 'Path to the yarn dependencies, from the git root folder'
+    required: false
+  ignore:
+    description: 'Comma separated list of package name to ignore'
+    required: false
+runs:
+  using: 'node12'
+  main: 'index.js'

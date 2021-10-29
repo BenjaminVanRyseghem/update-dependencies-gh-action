@@ -1,9 +1,9 @@
 const { exec } = require("child_process");
 
-function shellExec(command, { json = false, clientCwd = undefined } = {}) {
+function shellExec(command, { json = false, clientWorkingDirectory = undefined } = {}) {
 	return new Promise((resolve, reject) => {
 			exec(`${command} ${json ? "--json" : ""}`, {
-				cwd: clientCwd,
+				cwd: clientWorkingDirectory,
 				maxBuffer: 5 * 1024 * 1024,
 			}, (error, stdout, stderr) => {
 				if (error) {

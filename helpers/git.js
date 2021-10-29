@@ -1,8 +1,9 @@
 const { Branch, Cred, Reference, Repository, Reset, Signature } = require("nodegit");
 
 class Git {
-	constructor({ path, name, email }) {
+	constructor({ path, clientWorkingDirectory, name, email }) {
 		this._name = name;
+		this._clientWorkingDirectory = clientWorkingDirectory;
 		this._email = email;
 		this._repositoryPromise = Repository
 			.open(path)
@@ -42,9 +43,9 @@ class Git {
 	async _addYarnFilesToIndex() {
 		let repository = await this._repositoryPromise;
 		let index = await repository.refreshIndex();
-		await index.addAll(["monitor/Monitor.Web.Ui/Client/.yarn/*"]);
-		await index.addByPath("monitor/Monitor.Web.Ui/Client/yarn.lock");
-		await index.addByPath("monitor/Monitor.Web.Ui/Client/package.json");
+		await index.addAll([`${this._clientWorkingDirectory}/.yarn/*`]);
+		await index.addByPath(`${this._clientWorkingDirectory}/yarn.lock`);
+		await index.addByPath(`${this._clientWorkingDirectory}/package.json`);
 		await index.write();
 		const changes = await index.writeTree(); // get reference to a set of changes
 		const head = await Reference.nameToId(repository, "HEAD"); // get reference to the current state
