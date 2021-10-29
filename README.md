@@ -16,4 +16,4 @@ The code in this repository is distributed under the MIT license.
 
 ## Copyright
 
-Copyright (c) 2021 Benjamin Van Ryseghem <benjamin@vanryseghem.com>
+Copyright :copyright: 2021 Benjamin Van Ryseghem <benjamin@vanryseghem.com>
