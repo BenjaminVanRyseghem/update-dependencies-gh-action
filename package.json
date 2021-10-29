@@ -1,0 +1,21 @@
+{
+  "name": "update-dependencies-gh-action",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/BenjaminVanRyseghem/update-dependencies-gh-action",
+  "author": "Benjamin Van Ryseghem <benjamin.vanryseghem@gmail.com>",
+  "scripts": {
+    "build": "ncc build index.js --license licenses.txt"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
+    "luxon": "^2.0.2",
+    "marked": "^3.0.8",
+    "nodegit": "^0.27.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.31.1"
+  }
+}
